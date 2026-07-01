@@ -7,12 +7,19 @@ export const metadata: Metadata = {
   description: "Sistem peminjaman ruangan",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="id">
-      <body>
+      <body className="bg-gray-50">
         <Navbar />
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">{children}</main>
+
+        <main className="max-w-7xl mx-auto px-4 py-6 pb-24 md:px-6 lg:px-8 md:pb-8">
+          {children}
+        </main>
       </body>
     </html>
   );

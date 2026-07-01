@@ -74,14 +74,20 @@ export async function getSemuaPeminjaman(filter?: { ruangan?: string; tanggal?: 
 export async function approvePeminjaman(id: string) {
   await supabaseAdmin.from('peminjaman').update({ status: 'disetujui' }).eq('id', id);
   revalidatePath('/admin');
+  revalidatePath('/');          // ← tambahkan
+  revalidatePath('/daftar');    // ← tambahkan
 }
 export async function rejectPeminjaman(id: string) {
   await supabaseAdmin.from('peminjaman').update({ status: 'ditolak' }).eq('id', id);
   revalidatePath('/admin');
+  revalidatePath('/');
+  revalidatePath('/daftar');
 }
 export async function deletePeminjaman(id: string) {
   await supabaseAdmin.from('peminjaman').delete().eq('id', id);
   revalidatePath('/admin');
+  revalidatePath('/');
+  revalidatePath('/daftar');
 }
 export async function updatePeminjaman(id: string, formData: FormData) {
   const ruangan = formData.get('ruangan') as string;
@@ -102,5 +108,7 @@ export async function updatePeminjaman(id: string, formData: FormData) {
   }).eq('id', id);
   if (error) throw error;
   revalidatePath('/admin');
+  revalidatePath('/');
+  revalidatePath('/daftar');
   
 }
