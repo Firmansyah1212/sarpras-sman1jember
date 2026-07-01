@@ -16,10 +16,24 @@ export async function getJadwalAktif() {
 
 export async function getRuanganDigunakan() {
   const now = new Date();
-  const time = now.toTimeString().slice(0,5);
-  const today = now.toISOString().slice(0,10);
-  const { data } = await supabaseAdmin.from('peminjaman').select('ruangan').eq('tanggal', today).eq('status','disetujui').lte('jam_mulai', time).gte('jam_selesai', time);
-  return data ? [...new Set(data.map(d=>d.ruangan))] : []
+  const time = now.toTimeString().slice(0, 5);
+  const today = now.toISOString().slice(0, 10);
+
+  const { data } = await supabaseAdmin
+    .from('peminjaman')
+    .select('ruangan')
+    .eq('tanggal', today)
+    .eq('status', 'disetujui')
+    .lte('jam_mulai', time)
+    .gte('jam_selesai', time);
+
+  if (!data) return [];
+
+  return Array.from(
+    new Set(
+      data.map((d: any) => d.ruangan)
+    )
+  );
 }
 
 export async function checkBentrok(ruangan: string, tanggal: string, jamMulai: string, jamSelesai: string, excludeId?: string) {
