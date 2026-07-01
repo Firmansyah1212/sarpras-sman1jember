@@ -11,7 +11,7 @@ export default function Navbar() {
             <Link href="/" className="text-xl font-bold text-primary-700 flex items-center gap-2">
               <Calendar className="w-6 h-6" /> SMAN 1 Jember
             </Link>
-            <div className="hidden sm:flex space-x-4">
+            <div className="flex space-x-2 overflow-x-auto">
               <Link href="/" className="text-gray-600 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium flex items-center gap-1"><LayoutDashboard size={16}/> Dashboard</Link>
               <Link href="/pinjam" className="text-gray-600 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium flex items-center gap-1"><ClipboardList size={16}/> Form Peminjaman</Link>
               <Link href="/daftar" className="text-gray-600 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium flex items-center gap-1"><Calendar size={16}/> Daftar</Link>
