@@ -14,7 +14,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="id">
-      <body className="bg-gray-50">
+      <body className="bg-black-50">
         <Navbar />
 
         <main className="max-w-7xl mx-auto px-4 py-6 pb-24 md:px-6 lg:px-8 md:pb-8">
