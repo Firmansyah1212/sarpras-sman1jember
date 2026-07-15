@@ -10,7 +10,7 @@ export default async function Dashboard() {
 
   return (
     <div className="space-y-8">
-      <h1 className="text-3xl font-bold text-gray-800">Dashboard Peminjaman</h1>
+      <h1 className="text-3xl font-bold text-gray-800">SI-PRAS SMASA</h1>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <StatsCard title="Peminjaman Hari Ini" value={hariIni} icon={CalendarCheck} />
         <StatsCard title="Jadwal Aktif" value={jadwalAktif} icon={Clock} />
