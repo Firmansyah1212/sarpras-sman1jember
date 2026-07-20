@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
+
+import AppLayout from "@/components/layout/AppLayout";
 
 export const metadata: Metadata = {
-  title: "Peminjaman Sarpras SMAN 1 Jember",
-  description: "Sistem peminjaman ruangan",
+  title: "Sistem Peminjaman Sarpras SMAN 1 Jember",
+  description: "Sistem Peminjaman Sarana dan Prasarana",
 };
 
 export default function RootLayout({
@@ -14,12 +15,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="id">
-      <body className="bg-black-50">
-        <Navbar />
-
-        <main className="max-w-7xl mx-auto px-4 py-6 pb-24 md:px-6 lg:px-8 md:pb-8">
-          {children}
-        </main>
+      <body>
+        <AppLayout>{children}</AppLayout>
       </body>
     </html>
   );
