@@ -1,4 +1,3 @@
-// components/layout/Sidebar.tsx
 "use client";
 
 import Link from "next/link";
@@ -61,7 +60,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           ${isOpen ? "translate-x-0" : "-translate-x-full"}
         `}
       >
-        {/* Header dengan tombol close (hanya mobile) */}
+        {/* Header mobile */}
         <div className="flex items-center justify-between p-5 border-b border-gray-100 lg:hidden">
           <div>
             <h2 className="font-bold text-xl text-gray-800">SMAN 1 Jember</h2>
@@ -76,7 +75,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           </button>
         </div>
 
-        {/* Header desktop (hidden di mobile) */}
+        {/* Header desktop */}
         <div className="hidden lg:block p-6 border-b border-gray-100">
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold text-sm shadow-sm">
@@ -99,7 +98,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
               <Link
                 key={menu.title}
                 href={menu.href}
-                onClick={onClose} // Tutup sidebar di mobile setelah klik
+                onClick={onClose}
                 className={`
                   flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium
                   transition-all duration-200
@@ -120,7 +119,6 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           })}
         </nav>
 
-        {/* Footer sidebar (opsional) */}
         <div className="border-t border-gray-100 p-4">
           <p className="text-[11px] text-gray-400 text-center">
             © {new Date().getFullYear()} SMAN 1 Jember
