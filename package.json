@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.4.0",
-    "@supabase/ssr": "latest",
+    "@supabase/ssr": "^0.12.3",
     "@supabase/supabase-js": "latest",
     "@tanstack/react-table": "^8.21.3",
     "clsx": "^2.1.1",

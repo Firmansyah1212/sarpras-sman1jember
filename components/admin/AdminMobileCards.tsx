@@ -9,8 +9,10 @@ import {
   Eye,
 } from "lucide-react";
 
+
 interface Props {
   data: any[];
+  
 
   onApprove: (id: string) => void;
   onReject: (id: string) => void;

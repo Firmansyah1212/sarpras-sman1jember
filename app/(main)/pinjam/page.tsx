@@ -2,6 +2,7 @@
 'use client';
 
 import { useState } from 'react';
+import { createPeminjaman } from '@/lib/actions'; // ← import server action
 
 interface FormData {
   nama: string;
@@ -26,6 +27,11 @@ export default function FormPeminjaman() {
     file: null,
   });
   const [fileName, setFileName] = useState('Tidak ada file dipilih');
+  const [status, setStatus] = useState<{ type: 'success' | 'error' | null; message: string }>({
+    type: null,
+    message: '',
+  });
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -40,11 +46,59 @@ export default function FormPeminjaman() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Panggil server action dengan formData
-    // Server action akan menambahkan status: 'Menunggu' dan upload file ke storage
-    console.log('Data yang dikirim:', formData);
-    alert('Peminjaman berhasil dikirim! (simulasi)');
-    // Reset form jika perlu
+    console.log('📝 Form submitted, memanggil createPeminjaman...');
+    console.log('📝 Data yang dikirim:', formData);
+
+    setLoading(true);
+    setStatus({ type: null, message: '' });
+
+    try {
+      // Buat FormData untuk dikirim ke server action
+      const formDataToSend = new FormData();
+      formDataToSend.append('nama', formData.nama);
+      formDataToSend.append('kelas', formData.kelas);
+      formDataToSend.append('ruangan', formData.ruangan);
+      formDataToSend.append('tanggal', formData.tanggal);
+      formDataToSend.append('jam_mulai', formData.jam_mulai);
+      formDataToSend.append('jam_selesai', formData.jam_selesai);
+      formDataToSend.append('keperluan', formData.keperluan);
+      if (formData.file) {
+        formDataToSend.append('file_url', formData.file);
+      }
+
+      console.log('📤 Mengirim ke server action...');
+      await createPeminjaman(formDataToSend);
+      console.log('✅ createPeminjaman selesai tanpa error');
+
+      setStatus({ type: 'success', message: 'Peminjaman berhasil dikirim! Redirecting...' });
+      
+      // Reset form setelah sukses (opsional)
+      setFormData({
+        nama: '',
+        kelas: '',
+        ruangan: '',
+        tanggal: '',
+        jam_mulai: '',
+        jam_selesai: '',
+        keperluan: '',
+        file: null,
+      });
+      setFileName('Tidak ada file dipilih');
+
+      // Redirect setelah 1 detik (karena redirect sudah ditangani di server action, tapi sebagai fallback)
+      setTimeout(() => {
+        window.location.href = '/daftar';
+      }, 1000);
+
+    } catch (error: any) {
+      console.log('❌ Error di form:', error);
+      setStatus({
+        type: 'error',
+        message: error.message || 'Terjadi kesalahan saat mengirim peminjaman.',
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -62,9 +116,15 @@ export default function FormPeminjaman() {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Notifikasi */}
+        {status.type && (
+          <div className={`p-4 rounded-lg text-sm ${status.type === 'success' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200'}`}>
+            {status.message}
+          </div>
+        )}
+
         {/* Grid 2 kolom */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Nama */}
           <div>
             <label htmlFor="nama" className="block text-sm font-semibold text-gray-700 mb-1">
               Nama Peminjam <span className="text-red-500">*</span>
@@ -88,7 +148,6 @@ export default function FormPeminjaman() {
             </div>
           </div>
 
-          {/* Kelas */}
           <div>
             <label htmlFor="kelas" className="block text-sm font-semibold text-gray-700 mb-1">
               Kelas / Instansi <span className="text-red-500">*</span>
@@ -113,7 +172,6 @@ export default function FormPeminjaman() {
           </div>
         </div>
 
-        {/* Ruangan */}
         <div>
           <label htmlFor="ruangan" className="block text-sm font-semibold text-gray-700 mb-1">
             Ruangan <span className="text-red-500">*</span>
@@ -147,7 +205,6 @@ export default function FormPeminjaman() {
           </div>
         </div>
 
-        {/* Tanggal + Jam */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
           <div>
             <label htmlFor="tanggal" className="block text-sm font-semibold text-gray-700 mb-1">
@@ -216,7 +273,6 @@ export default function FormPeminjaman() {
           </div>
         </div>
 
-        {/* Keperluan */}
         <div>
           <label htmlFor="keperluan" className="block text-sm font-semibold text-gray-700 mb-1">
             Keperluan <span className="text-red-500">*</span>
@@ -240,7 +296,6 @@ export default function FormPeminjaman() {
           </div>
         </div>
 
-        {/* Upload Surat/Proposal */}
         <div>
           <label htmlFor="file" className="block text-sm font-semibold text-gray-700 mb-1">
             Upload Surat / Proposal
@@ -266,16 +321,28 @@ export default function FormPeminjaman() {
           </div>
         </div>
 
-        {/* Tombol Kirim */}
         <div className="pt-4 border-t border-gray-200">
           <button
             type="submit"
-            className="w-full sm:w-auto px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition flex items-center justify-center gap-2 text-lg"
+            disabled={loading}
+            className="w-full sm:w-auto px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition flex items-center justify-center gap-2 text-lg disabled:opacity-70"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-            </svg>
-            Kirim Peminjaman
+            {loading ? (
+              <>
+                <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                </svg>
+                Memproses...
+              </>
+            ) : (
+              <>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+                Kirim Peminjaman
+              </>
+            )}
           </button>
           <p className="mt-3 text-sm text-gray-400">* Field wajib diisi</p>
         </div>
