@@ -27,7 +27,7 @@ export default function DaftarClient({ data }: { data: any[] }) {
 
     return (
       <span
-        className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${map[status]}`}
+        className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ${map[status]}`}
       >
         {status}
       </span>
@@ -37,39 +37,30 @@ export default function DaftarClient({ data }: { data: any[] }) {
   return (
     <>
       <div className="space-y-6">
-
         <div>
-          <h1 className="text-3xl font-bold">
-            Daftar Peminjaman
-          </h1>
-
-          <p className="text-slate-500 mt-1">
+          <h1 className="text-2xl font-bold">Daftar Peminjaman</h1>
+          <p className="text-slate-500 text-sm mt-1">
             Seluruh data peminjaman sarana dan prasarana.
           </p>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-3">
-
+        {/* Filter */}
+        <div className="grid gap-3 sm:grid-cols-3">
           <div className="relative">
-
-            <Search
-              className="absolute left-3 top-3 text-gray-400"
-              size={18}
-            />
-
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
             <input
               type="text"
               placeholder="Cari nama atau kelas..."
-              className="pl-10"
+              className="w-full pl-9 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
-
           </div>
 
           <select
             value={filterRuangan}
             onChange={(e) => setFilterRuangan(e.target.value)}
+            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none bg-white"
           >
             <option value="">Semua Ruangan</option>
             <option>Aula Pratama</option>
@@ -80,240 +71,144 @@ export default function DaftarClient({ data }: { data: any[] }) {
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
+            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none bg-white"
           >
             <option value="">Semua Status</option>
             <option value="menunggu">Menunggu</option>
             <option value="disetujui">Disetujui</option>
             <option value="ditolak">Ditolak</option>
           </select>
-
         </div>
 
-        {/* ================= DESKTOP ================= */}
-
-        <div className="hidden lg:block overflow-x-auto bg-white rounded-2xl shadow-sm border">
-
-          <table className="w-full">
-
-            <thead>
-
-              <tr className="border-b bg-slate-50 text-sm">
-
-                <th className="text-left p-4">Nama</th>
-                <th className="text-left">Kelas</th>
-                <th className="text-left">Ruangan</th>
-                <th className="text-left">Tanggal</th>
-                <th className="text-left">Jam</th>
-                <th className="text-left">Keperluan</th>
-                <th className="text-left">Status</th>
-                <th className="text-center">Aksi</th>
-
-              </tr>
-
-            </thead>
-
-            <tbody>
-
-              {filtered.map((item) => (
-
-                <tr
-                  key={item.id}
-                  className="border-b hover:bg-slate-50"
-                >
-
-                  <td className="p-4 font-medium">
-                    {item.nama}
-                  </td>
-
-                  <td>{item.kelas}</td>
-
-                  <td>{item.ruangan}</td>
-
-                  <td>{item.tanggal}</td>
-
-                  <td>
-                    {item.jam_mulai?.slice(0, 5)} -{' '}
-                    {item.jam_selesai?.slice(0, 5)}
-                  </td>
-
-                  <td className="max-w-[250px]">
-
-                    <div
-                      className="truncate"
-                      title={item.keperluan}
-                    >
-                      {item.keperluan}
-                    </div>
-
-                  </td>
-
-                  <td>{statusBadge(item.status)}</td>
-
-                  <td className="text-center">
-
-                    <button
-                      onClick={() => setSelected(item)}
-                      className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-3 py-2 text-white hover:bg-blue-700"
-                    >
-                      <Eye size={16} />
-                      Detail
-                    </button>
-
-                  </td>
-
+        {/* ================= TABEL DESKTOP (FULL WIDTH, NO SCROLL) ================= */}
+        <div className="hidden lg:block bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full table-fixed text-sm">
+              <thead>
+                <tr className="border-b bg-gray-50/80 text-xs uppercase tracking-wider text-gray-500">
+                  <th className="w-[18%] px-3 py-3 text-left font-semibold">Nama</th>
+                  <th className="w-[12%] px-3 py-3 text-left font-semibold">Kelas</th>
+                  <th className="w-[14%] px-3 py-3 text-left font-semibold">Ruangan</th>
+                  <th className="w-[12%] px-3 py-3 text-left font-semibold">Tanggal</th>
+                  <th className="w-[12%] px-3 py-3 text-left font-semibold">Jam</th>
+                  <th className="w-[18%] px-3 py-3 text-left font-semibold">Keperluan</th>
+                  <th className="w-[10%] px-3 py-3 text-left font-semibold">Status</th>
+                  <th className="w-[8%] px-3 py-3 text-center font-semibold">Aksi</th>
                 </tr>
-
-              ))}
-
-            </tbody>
-
-          </table>
-
+              </thead>
+              <tbody>
+                {filtered.map((item) => (
+                  <tr key={item.id} className="border-b border-gray-100 hover:bg-gray-50/50 transition">
+                    <td className="px-3 py-2.5 font-medium text-gray-800 truncate" title={item.nama}>
+                      {item.nama}
+                    </td>
+                    <td className="px-3 py-2.5 text-gray-600 truncate">{item.kelas}</td>
+                    <td className="px-3 py-2.5 text-gray-600 truncate">{item.ruangan}</td>
+                    <td className="px-3 py-2.5 text-gray-600">{item.tanggal}</td>
+                    <td className="px-3 py-2.5 text-gray-600 whitespace-nowrap">
+                      {item.jam_mulai?.slice(0, 5)} - {item.jam_selesai?.slice(0, 5)}
+                    </td>
+                    <td className="px-3 py-2.5 text-gray-600">
+                      <div className="truncate max-w-[180px]" title={item.keperluan}>
+                        {item.keperluan}
+                      </div>
+                    </td>
+                    <td className="px-3 py-2.5">{statusBadge(item.status)}</td>
+                    <td className="px-3 py-2.5 text-center">
+                      <button
+                        onClick={() => setSelected(item)}
+                        className="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-700 transition"
+                      >
+                        <Eye size={14} />
+                        Detail
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
 
-        {/* ================= MOBILE ================= */}
-
+        {/* ================= MOBILE (KARTU) ================= */}
         <div className="lg:hidden space-y-4">
-
           {filtered.map((item) => (
-
-            <div
-              key={item.id}
-              className="bg-white rounded-2xl shadow-sm border p-5"
-            >
-
+            <div key={item.id} className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
               <div className="flex justify-between items-start">
-
                 <div>
-
-                  <h3 className="font-semibold text-lg">
-                    {item.nama}
-                  </h3>
-
-                  <p className="text-sm text-slate-500">
-                    {item.kelas}
-                  </p>
-
+                  <h3 className="font-semibold text-gray-800">{item.nama}</h3>
+                  <p className="text-sm text-gray-500">{item.kelas}</p>
                 </div>
-
                 {statusBadge(item.status)}
-
               </div>
 
-              <div className="mt-4 space-y-2 text-sm">
-
-                <p>
-                  <b>Ruangan :</b> {item.ruangan}
-                </p>
-
-                <p>
-                  <b>Tanggal :</b> {item.tanggal}
-                </p>
-
-                <p>
-                  <b>Jam :</b> {item.jam_mulai?.slice(0, 5)} -{' '}
-                  {item.jam_selesai?.slice(0, 5)}
-                </p>
-
-                <p>
-                  <b>Keperluan :</b>
-                </p>
-
-                <p className="text-slate-600">
-                  {item.keperluan}
-                </p>
-
+              <div className="mt-3 space-y-1.5 text-sm text-gray-600">
+                <p><span className="font-medium">Ruangan:</span> {item.ruangan}</p>
+                <p><span className="font-medium">Tanggal:</span> {item.tanggal}</p>
+                <p><span className="font-medium">Jam:</span> {item.jam_mulai?.slice(0, 5)} - {item.jam_selesai?.slice(0, 5)}</p>
+                <p><span className="font-medium">Keperluan:</span></p>
+                <p className="text-gray-700 bg-gray-50 rounded-lg px-3 py-2 text-sm">{item.keperluan}</p>
               </div>
 
               <button
                 onClick={() => setSelected(item)}
-                className="mt-5 w-full rounded-xl bg-blue-600 py-2 text-white hover:bg-blue-700"
+                className="mt-4 w-full rounded-lg bg-blue-600 py-2 text-sm font-medium text-white hover:bg-blue-700 transition"
               >
                 Lihat Detail
               </button>
-
             </div>
-
           ))}
-
         </div>
-
       </div>
 
       {/* ================= MODAL ================= */}
-
       {selected && (
-
         <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
-
-          <div className="bg-white rounded-2xl w-full max-w-xl p-6">
-
-            <div className="flex justify-between items-center mb-6">
-
-              <h2 className="text-2xl font-bold">
-                Detail Peminjaman
-              </h2>
-
-              <button
-                onClick={() => setSelected(null)}
-              >
-                <X />
+          <div className="bg-white rounded-2xl w-full max-w-lg p-6 max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-5">
+              <h2 className="text-xl font-bold text-gray-800">Detail Peminjaman</h2>
+              <button onClick={() => setSelected(null)} className="text-gray-400 hover:text-gray-600">
+                <X size={20} />
               </button>
-
             </div>
 
-            <div className="grid md:grid-cols-2 gap-4">
-
+            <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
-                <p className="text-slate-500">Nama</p>
-                <p>{selected.nama}</p>
+                <p className="text-gray-500 text-xs uppercase tracking-wide">Nama</p>
+                <p className="font-medium text-gray-800">{selected.nama}</p>
               </div>
-
               <div>
-                <p className="text-slate-500">Kelas</p>
-                <p>{selected.kelas}</p>
+                <p className="text-gray-500 text-xs uppercase tracking-wide">Kelas</p>
+                <p className="font-medium text-gray-800">{selected.kelas}</p>
               </div>
-
               <div>
-                <p className="text-slate-500">Ruangan</p>
-                <p>{selected.ruangan}</p>
+                <p className="text-gray-500 text-xs uppercase tracking-wide">Ruangan</p>
+                <p className="font-medium text-gray-800">{selected.ruangan}</p>
               </div>
-
               <div>
-                <p className="text-slate-500">Tanggal</p>
-                <p>{selected.tanggal}</p>
+                <p className="text-gray-500 text-xs uppercase tracking-wide">Tanggal</p>
+                <p className="font-medium text-gray-800">{selected.tanggal}</p>
               </div>
-
               <div>
-                <p className="text-slate-500">Jam</p>
-                <p>
+                <p className="text-gray-500 text-xs uppercase tracking-wide">Jam</p>
+                <p className="font-medium text-gray-800">
                   {selected.jam_mulai} - {selected.jam_selesai}
                 </p>
               </div>
-
               <div>
-                <p className="text-slate-500">Status</p>
+                <p className="text-gray-500 text-xs uppercase tracking-wide">Status</p>
                 {statusBadge(selected.status)}
               </div>
-
             </div>
 
             <div className="mt-5">
-
-              <p className="text-slate-500 mb-2">
-                Keperluan
-              </p>
-
-              <div className="rounded-xl bg-slate-100 p-4">
+              <p className="text-gray-500 text-xs uppercase tracking-wide mb-1.5">Keperluan</p>
+              <div className="rounded-xl bg-gray-50 p-4 text-gray-700 text-sm">
                 {selected.keperluan}
               </div>
-
             </div>
-
           </div>
-
         </div>
-
       )}
     </>
   );
