@@ -16,7 +16,7 @@ export default function QuickAction() {
       </Link>
 
       <Link
-        href="/daftar"
+        href="/pinjam"
         className="rounded-2xl bg-emerald-600 text-white p-5 hover:bg-emerald-700 transition"
       >
         <List className="mb-3" size={28} />
