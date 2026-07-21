@@ -206,6 +206,17 @@ export default function DaftarClient({ data }: { data: any[] }) {
               <div className="rounded-xl bg-gray-50 p-4 text-gray-700 text-sm">
                 {selected.keperluan}
               </div>
+              {selected.status === "ditolak" && selected.alasan_penolakan && (
+  <div className="mt-5">
+    <p className="text-red-600 text-xs uppercase tracking-wide mb-1.5 font-semibold">
+      Alasan Penolakan
+    </p>
+
+    <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-red-700 text-sm">
+      {selected.alasan_penolakan}
+    </div>
+  </div>
+)}
             </div>
           </div>
         </div>
