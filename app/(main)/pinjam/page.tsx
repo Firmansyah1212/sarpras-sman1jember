@@ -194,6 +194,7 @@ export default function FormPeminjaman() {
               <option value="Aula Jarkasi">Aula Jarkasi</option>
               <option value="Aula Pratama">Aula Pratama</option>
               <option value="Lab Komputer">Lab Komputer</option>
+              <option value="Aula Madya">Aula Madya</option>
               <option value="Ruang Rapat">Ruang Rapat</option>
               <option value="Lapangan">Lapangan</option>
             </select>
