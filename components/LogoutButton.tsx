@@ -1,22 +1,24 @@
-// components/LogoutButton.tsx
 'use client';
 
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
 
-export function LogoutButton() {
+export default function LogoutButton() {
   const router = useRouter();
-  const supabase = createClient();
 
-  const handleLogout = async () => {
+  const logout = async () => {
+    const supabase = createClient();
+
     await supabase.auth.signOut();
-    router.push('/admin/login');
+
+    router.replace('/admin/login');
+    router.refresh();
   };
 
   return (
     <button
-      onClick={handleLogout}
-      className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition"
+      onClick={logout}
+      className="rounded-xl bg-red-600 px-4 py-2 text-white hover:bg-red-700"
     >
       Logout
     </button>

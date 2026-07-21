@@ -1,11 +1,31 @@
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+
+
 import { getSemuaPeminjaman } from "@/lib/actions";
 import AdminTable from "@/components/AdminTable";
+import LogoutButton from "@/components/LogoutButton";
 
 export default async function AdminPage() {
+
+  const supabase = await createClient();
+
+const {
+  data: { user },
+} = await supabase.auth.getUser();
+
+if (!user) {
+  redirect("/admin/login");
+}
+
   const data = await getSemuaPeminjaman();
+
   return (
     <div>
-      <h1 className="text-3xl font-bold mb-6">Panel Admin - Kelola Peminjaman</h1>
+      <div className="mb-6 flex justify-end">
+   <LogoutButton />
+</div>
+
       <AdminTable data={data} />
     </div>
   );
