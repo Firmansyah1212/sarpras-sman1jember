@@ -71,7 +71,7 @@ export default function LoginAdmin() {
       {/* Logo */}
       <div className="mb-8 text-center">
         <img
-          src="/logo.png"
+          src="/Logo.png"
           alt="Logo SMAN 1 Jember"
           className="mx-auto h-20 w-20 object-contain drop-shadow-xl sm:h-24 sm:w-24"
         />
