@@ -77,11 +77,26 @@ export async function approvePeminjaman(id: string) {
   revalidatePath('/');          // ← tambahkan
   revalidatePath('/daftar');    // ← tambahkan
 }
-export async function rejectPeminjaman(id: string) {
-  await supabaseAdmin.from('peminjaman').update({ status: 'ditolak' }).eq('id', id);
-  revalidatePath('/admin');
-  revalidatePath('/');
-  revalidatePath('/daftar');
+export async function rejectPeminjaman(
+  id: string,
+  alasan: string
+) {
+
+  const { error } = await supabaseAdmin
+    .from("peminjaman")
+    .update({
+      status: "ditolak",
+      alasan_penolakan: alasan,
+    })
+    .eq("id", id);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  revalidatePath("/admin");
+  revalidatePath("/");
+  revalidatePath("/daftar");
 }
 export async function deletePeminjaman(id: string) {
   await supabaseAdmin.from('peminjaman').delete().eq('id', id);

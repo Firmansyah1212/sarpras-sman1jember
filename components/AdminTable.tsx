@@ -25,6 +25,8 @@ export default function AdminTable({
   const [editing, setEditing] = useState<any>(null);
   const [selected, setSelected] = useState<any>(null);
   const [deleteItem, setDeleteItem] = useState<any>(null);
+  const [rejectItem, setRejectItem] = useState<any>(null);
+  const [rejectReason, setRejectReason] = useState("");
 
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
@@ -134,12 +136,13 @@ export default function AdminTable({
     await refresh();
     setLoadingId(null);
   }}
-  onReject={async (id) => {
-    setLoadingId(id);
-    await rejectPeminjaman(id);
-    await refresh();
-    setLoadingId(null);
-  }}
+  onReject={(id) => {
+  const item = filtered.find((i) => i.id === id);
+  if (item) {
+    setRejectItem(item);
+    setRejectReason("");
+  }
+}}
   onEdit={(item) => setEditing(item)}
   onDelete={(id) => {
     const item = filtered.find((i) => i.id === id);
@@ -156,12 +159,13 @@ export default function AdminTable({
     await refresh();
     setLoadingId(null);
   }}
-  onReject={async (id) => {
-    setLoadingId(id);
-    await rejectPeminjaman(id);
-    await refresh();
-    setLoadingId(null);
-  }}
+  onReject={(id) => {
+  const item = filtered.find((i) => i.id === id);
+  if (item) {
+    setRejectItem(item);
+    setRejectReason("");
+  }
+}}
   onEdit={(item) => setEditing(item)}
   onDelete={(id) => {
     const item = filtered.find((i) => i.id === id);
@@ -323,11 +327,81 @@ export default function AdminTable({
 
         </div>
       )}
+{rejectItem && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
 
+    <div className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-xl">
+
+      <h2 className="text-xl font-bold">
+        Tolak Peminjaman
+      </h2>
+
+      <p className="mt-2 text-slate-500">
+        Berikan alasan penolakan untuk
+        <br />
+        <b>{rejectItem.nama}</b>
+      </p>
+
+      <textarea
+        value={rejectReason}
+        onChange={(e) => setRejectReason(e.target.value)}
+        rows={5}
+        placeholder="Masukkan alasan penolakan..."
+        className="mt-5 w-full rounded-xl border p-3"
+      />
+
+      <div className="mt-6 flex justify-end gap-3">
+
+        <button
+          onClick={() => {
+            setRejectItem(null);
+            setRejectReason("");
+          }}
+          className="rounded-xl border px-5 py-2"
+        >
+          Batal
+        </button>
+
+        <button
+          onClick={async () => {
+
+            if (!rejectReason.trim()) {
+              alert("Alasan penolakan wajib diisi.");
+              return;
+            }
+
+            setLoadingId(rejectItem.id);
+
+            await rejectPeminjaman(
+              rejectItem.id,
+              rejectReason
+            );
+
+            await refresh();
+
+            setLoadingId(null);
+
+            setRejectItem(null);
+
+            setRejectReason("");
+
+          }}
+          className="rounded-xl bg-red-600 px-5 py-2 text-white"
+        >
+          Tolak
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+)}
       <DetailDialog
         open={selected !== null}
         data={selected}
         onClose={() => setSelected(null)}
+        
       />
 
     </div>
