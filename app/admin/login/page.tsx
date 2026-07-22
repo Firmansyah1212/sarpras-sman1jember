@@ -36,6 +36,7 @@ export default function LoginAdmin() {
     }
 
     router.replace('/admin');
+router.refresh();
   };
 
   return (
@@ -94,7 +95,7 @@ export default function LoginAdmin() {
           </p>
         </div>
 
-        <form onSubmit={handleLogin} className="space-y-5">
+        <form onSubmit={handleLogin} className="space-y-5" autoComplete="on">
           {error && (
             <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-600">
               {error}
@@ -107,27 +108,29 @@ export default function LoginAdmin() {
             </label>
 
             <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Masukkan email"
-              className="
-                w-full
-                rounded-xl
-                border
-                border-gray-300
-                px-4
-                py-3
-                text-sm
-                outline-none
-                transition
-                focus:border-blue-500
-                focus:ring-2
-                focus:ring-blue-200
-                sm:text-base
-              "
-            />
+  type="email"
+  name="email"
+  autoComplete="email"
+  required
+  value={email}
+  onChange={(e) => setEmail(e.target.value)}
+  placeholder="Masukkan email"
+  className="
+    w-full
+    rounded-xl
+    border
+    border-gray-300
+    px-4
+    py-3
+    text-sm
+    outline-none
+    transition
+    focus:border-blue-500
+    focus:ring-2
+    focus:ring-blue-200
+    sm:text-base
+  "
+/>
           </div>
 
           <div>
@@ -136,27 +139,29 @@ export default function LoginAdmin() {
             </label>
 
             <input
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Masukkan password"
-              className="
-                w-full
-                rounded-xl
-                border
-                border-gray-300
-                px-4
-                py-3
-                text-sm
-                outline-none
-                transition
-                focus:border-blue-500
-                focus:ring-2
-                focus:ring-blue-200
-                sm:text-base
-              "
-            />
+  type="password"
+  name="password"
+  autoComplete="current-password"
+  required
+  value={password}
+  onChange={(e) => setPassword(e.target.value)}
+  placeholder="Masukkan password"
+  className="
+    w-full
+    rounded-xl
+    border
+    border-gray-300
+    px-4
+    py-3
+    text-sm
+    outline-none
+    transition
+    focus:border-blue-500
+    focus:ring-2
+    focus:ring-blue-200
+    sm:text-base
+  "
+/>
           </div>
 
           <button
