@@ -44,22 +44,96 @@ export async function checkBentrok(ruangan: string, tanggal: string, jamMulai: s
 }
 
 export async function createPeminjaman(formData: FormData) {
-  const nama = formData.get('nama') as string;
-  const kelas = formData.get('kelas') as string;
-  const ruangan = formData.get('ruangan') as string;
-  const tanggal = formData.get('tanggal') as string;
-  const jamMulai = formData.get('jam_mulai') as string;
-  const jamSelesai = formData.get('jam_selesai') as string;
-  const keperluan = formData.get('keperluan') as string;
-  const fileUrl = formData.get('file_url') as string;
-  if (!nama || !kelas || !ruangan || !tanggal || !jamMulai || !jamSelesai || !keperluan) throw new Error('Semua field wajib diisi');
-  if (jamMulai >= jamSelesai) throw new Error('Jam selesai harus lebih besar dari jam mulai');
-  const bentrok = await checkBentrok(ruangan, tanggal, jamMulai, jamSelesai);
-  if (bentrok) throw new Error('Ruangan sudah dipakai pada jam tersebut, silakan pilih waktu lain.');
-  const { error } = await supabaseAdmin.from('peminjaman').insert({ nama, kelas, ruangan, tanggal, jam_mulai: jamMulai, jam_selesai: jamSelesai, keperluan, file_url: fileUrl || null });
-  if (error) throw new Error('Gagal menyimpan: ' + error.message);
-  revalidatePath('/');
-  revalidatePath('/daftar');
+  const nama = formData.get("nama") as string;
+  const kelas = formData.get("kelas") as string;
+  const ruangan = formData.get("ruangan") as string;
+  const tanggal = formData.get("tanggal") as string;
+  const jamMulai = formData.get("jam_mulai") as string;
+  const jamSelesai = formData.get("jam_selesai") as string;
+  const keperluan = formData.get("keperluan") as string;
+
+  if (
+    !nama ||
+    !kelas ||
+    !ruangan ||
+    !tanggal ||
+    !jamMulai ||
+    !jamSelesai ||
+    !keperluan
+  ) {
+    throw new Error("Semua field wajib diisi");
+  }
+
+  if (jamMulai >= jamSelesai) {
+    throw new Error("Jam selesai harus lebih besar dari jam mulai");
+  }
+
+  const bentrok = await checkBentrok(
+    ruangan,
+    tanggal,
+    jamMulai,
+    jamSelesai
+  );
+
+  if (bentrok) {
+    throw new Error(
+      "Ruangan sudah dipakai pada jam tersebut."
+    );
+  }
+
+  let fileUrl: string | null = null;
+
+  const file = formData.get("file_url") as File | null;
+
+  if (file && file.size > 0) {
+    const ext = file.name.split(".").pop();
+
+    const fileName = `${Date.now()}-${Math.random()
+      .toString(36)
+      .substring(2)}.${ext}`;
+
+    const { error: uploadError } =
+      await supabaseAdmin.storage
+        .from("proposal")
+        .upload(fileName, file, {
+          cacheControl: "3600",
+          upsert: false,
+          contentType: file.type,
+        });
+
+    if (uploadError) {
+      throw new Error(uploadError.message);
+    }
+
+    const { data } =
+      supabaseAdmin.storage
+        .from("proposal")
+        .getPublicUrl(fileName);
+
+    fileUrl = data.publicUrl;
+  }
+
+  const { error } =
+    await supabaseAdmin
+      .from("peminjaman")
+      .insert({
+        nama,
+        kelas,
+        ruangan,
+        tanggal,
+        jam_mulai: jamMulai,
+        jam_selesai: jamSelesai,
+        keperluan,
+        file_url: fileUrl,
+      });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  revalidatePath("/");
+  revalidatePath("/admin");
+  revalidatePath("/daftar");
 }
 
 export async function getSemuaPeminjaman(filter?: { ruangan?: string; tanggal?: string; status?: string }) {
