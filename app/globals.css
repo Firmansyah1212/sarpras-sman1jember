@@ -2,65 +2,92 @@
 @tailwind components;
 @tailwind utilities;
 
-:root{
-  --primary:#2563EB;
-  --primary-dark:#1D4ED8;
-  --success:#16A34A;
-  --danger:#DC2626;
+/* ===========================
+   Theme
+=========================== */
 
-  --bg:#F8FAFC;
-  --card:#FFFFFF;
+:root {
+  --primary: #2563eb;
+  --primary-dark: #1d4ed8;
+  --success: #16a34a;
+  --danger: #dc2626;
 
-  --border:#E2E8F0;
+  --bg: #f8fafc;
+  --card: #ffffff;
 
-  --text:#0F172A;
-  --muted:#64748B;
+  --border: #e2e8f0;
+
+  --text: #0f172a;
+  --muted: #64748b;
 }
 
-html{
-  scroll-behavior:smooth;
+/* ===========================
+   Base
+=========================== */
+
+html {
+  scroll-behavior: smooth;
 }
 
-body{
-  background:var(--bg);
-  color:var(--text);
-  font-family:Inter,Arial,sans-serif;
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-::-webkit-scrollbar{
-  width:8px;
+/* ===========================
+   Scrollbar
+=========================== */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
 }
 
-::-webkit-scrollbar-thumb{
-  background:#CBD5E1;
-  border-radius:100px;
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
 }
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ===========================
+   Form
+=========================== */
 
 input,
 select,
-textarea{
-
-  @apply border
-  rounded-xl
-  px-4
-  py-3
-  w-full
-  outline-none
-  transition-all;
-
-  border-color:var(--border);
+textarea {
+  @apply w-full rounded-xl border px-4 py-3 outline-none transition-all;
+  border-color: var(--border);
+  background: white;
 }
 
 input:focus,
 select:focus,
-textarea:focus{
-
-  border-color:var(--primary);
-
+textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
 }
 
-button{
+/* ===========================
+   Button
+=========================== */
 
-  transition:.25s;
+button {
+  transition: all 0.2s ease;
+}
 
+/* ===========================
+   Utility
+=========================== */
+
+.card {
+  @apply rounded-2xl border bg-white shadow-sm;
+}
+
+.container-page {
+  @apply mx-auto max-w-7xl px-4 md:px-6 lg:px-8;
 }
