@@ -191,12 +191,21 @@ export default function FormPeminjaman() {
               className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none appearance-none bg-white transition"
             >
               <option value="">Pilih Ruangan</option>
-              <option value="Aula Jarkasi">Aula Jarkasi</option>
-              <option value="Aula Pratama">Aula Pratama</option>
-              <option value="Lab Komputer">Lab Komputer</option>
-              <option value="Aula Madya">Aula Madya</option>
-              <option value="Ruang Rapat">Ruang Rapat</option>
-              <option value="Lapangan">Lapangan</option>
+              <option>Aula Pratama</option>
+<option>Aula Madya</option>
+<option>Aula Jarkasi</option>
+<option>Lab Komputer 1</option>
+<option>Lab Komputer 2</option>
+<option>Lab Komputer 3</option>
+<option>Lapangan</option>
+<option>Ruang Rapat</option>
+<option>Gedung A</option>
+<option>Gedung B</option>
+<option>Gedung C</option>
+<option>Gedung D</option>
+<option>Gedung E</option>
+<option>Gedung F</option>
+<option>Gedung G</option>
             </select>
             <span className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-gray-400">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

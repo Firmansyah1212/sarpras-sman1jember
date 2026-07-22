@@ -65,7 +65,19 @@ export default function DaftarClient({ data }: { data: any[] }) {
             <option value="">Semua Ruangan</option>
             <option>Aula Pratama</option>
             <option>Aula Madya</option>
-            <option>Aula Jarkasi</option>
+<option>Aula Jarkasi</option>
+<option>Lab Komputer 1</option>
+<option>Lab Komputer 2</option>
+<option>Lab Komputer 3</option>
+<option>Lapangan</option>
+<option>Ruang Rapat</option>
+<option>Gedung A</option>
+<option>Gedung B</option>
+<option>Gedung C</option>
+<option>Gedung D</option>
+<option>Gedung E</option>
+<option>Gedung F</option>
+<option>Gedung G</option>
           </select>
 
           <select
