@@ -21,10 +21,19 @@ if (!user) {
   const data = await getSemuaPeminjaman();
 
   return (
+    
     <div>
       <div className="mb-6 flex justify-end">
+        <a
+  href="/api/download-proposal"
+  className="rounded-lg bg-green-600 px-4 py-2 text-white hover:bg-green-700"
+>
+  📥 Download Semua Proposal
+</a>
    <LogoutButton />
 </div>
+
+
 
       <AdminTable data={data} />
     </div>
