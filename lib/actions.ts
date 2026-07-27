@@ -2,6 +2,8 @@
 import { supabaseAdmin } from './supabase/admin'
 import { revalidatePath } from 'next/cache'
 
+
+
 export async function getPeminjamanHariIni() {
   const today = new Date().toISOString().slice(0,10)
   const { count } = await supabaseAdmin.from('peminjaman').select('*', { count: 'exact', head: true }).eq('tanggal', today).neq('status','ditolak')
@@ -19,13 +21,12 @@ export async function getRuanganDigunakan() {
   const time = now.toTimeString().slice(0, 5);
   const today = now.toISOString().slice(0, 10);
 
-  const { data } = await supabaseAdmin
-    .from('peminjaman')
-    .select('ruangan')
-    .eq('tanggal', today)
-    .eq('status', 'disetujui')
-    .lte('jam_mulai', time)
-    .gte('jam_selesai', time);
+ const { data } = await supabaseAdmin
+  .from("peminjaman")
+  .select("*")
+  .order("tanggal", { ascending: true })
+  .order("jam_mulai", { ascending: true })
+  .throwOnError();
 
   if (!data) return [];
 
