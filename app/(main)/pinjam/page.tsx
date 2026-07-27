@@ -45,61 +45,77 @@ export default function FormPeminjaman() {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('📝 Form submitted, memanggil createPeminjaman...');
-    console.log('📝 Data yang dikirim:', formData);
+  e.preventDefault();
 
-    setLoading(true);
-    setStatus({ type: null, message: '' });
+  setLoading(true);
+  setStatus({
+    type: null,
+    message: "",
+  });
 
-    try {
-      // Buat FormData untuk dikirim ke server action
-      const formDataToSend = new FormData();
-      formDataToSend.append('nama', formData.nama);
-      formDataToSend.append('kelas', formData.kelas);
-      formDataToSend.append('ruangan', formData.ruangan);
-      formDataToSend.append('tanggal', formData.tanggal);
-      formDataToSend.append('jam_mulai', formData.jam_mulai);
-      formDataToSend.append('jam_selesai', formData.jam_selesai);
-      formDataToSend.append('keperluan', formData.keperluan);
-      if (formData.file) {
-        formDataToSend.append('file_url', formData.file);
-      }
+  try {
+    const formDataToSend = new FormData();
 
-      console.log('📤 Mengirim ke server action...');
-      await createPeminjaman(formDataToSend);
-      console.log('✅ createPeminjaman selesai tanpa error');
+    formDataToSend.append("nama", formData.nama);
+    formDataToSend.append("kelas", formData.kelas);
+    formDataToSend.append("ruangan", formData.ruangan);
+    formDataToSend.append("tanggal", formData.tanggal);
+    formDataToSend.append("jam_mulai", formData.jam_mulai);
+    formDataToSend.append("jam_selesai", formData.jam_selesai);
+    formDataToSend.append("keperluan", formData.keperluan);
 
-      setStatus({ type: 'success', message: 'Peminjaman berhasil dikirim! Redirecting...' });
-      
-      // Reset form setelah sukses (opsional)
-      setFormData({
-        nama: '',
-        kelas: '',
-        ruangan: '',
-        tanggal: '',
-        jam_mulai: '',
-        jam_selesai: '',
-        keperluan: '',
-        file: null,
-      });
-      setFileName('Tidak ada file dipilih');
-
-      // Redirect setelah 1 detik (karena redirect sudah ditangani di server action, tapi sebagai fallback)
-      setTimeout(() => {
-        window.location.href = '/daftar';
-      }, 1000);
-
-    } catch (error: any) {
-      console.log('❌ Error di form:', error);
-      setStatus({
-        type: 'error',
-        message: error.message || 'Terjadi kesalahan saat mengirim peminjaman.',
-      });
-    } finally {
-      setLoading(false);
+    if (formData.file) {
+      formDataToSend.append("file_url", formData.file);
     }
-  };
+
+    await createPeminjaman(formDataToSend);
+
+    setStatus({
+      type: "success",
+      message: "Peminjaman berhasil dikirim.",
+    });
+
+    setFormData({
+      nama: "",
+      kelas: "",
+      ruangan: "",
+      tanggal: "",
+      jam_mulai: "",
+      jam_selesai: "",
+      keperluan: "",
+      file: null,
+    });
+
+    setFileName("Tidak ada file dipilih");
+
+    setTimeout(() => {
+      window.location.href = "/daftar";
+    }, 1200);
+  } catch (err: any) {
+    console.error(err);
+
+    let message = "Terjadi kesalahan saat mengirim data.";
+
+    if (err?.message) {
+      message = err.message;
+    }
+
+    if (
+      String(err).includes("digest") ||
+      String(err).includes("Server Components")
+    ) {
+      message =
+        "Ruangan sudah dipakai pada tanggal dan jam tersebut. Silakan pilih jadwal lain.";
+    }
+
+    setStatus({
+      type: "error",
+      message,
+    });
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-2xl shadow-xl border border-gray-100">
