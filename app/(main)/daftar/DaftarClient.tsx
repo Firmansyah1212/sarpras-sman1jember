@@ -93,7 +93,11 @@ export default function DaftarClient({ data }: { data: any[] }) {
   <optgroup label="Kelas XI dan XII">
     <option>XI Humaniora</option>
     <option>XII Humaniora</option>
+    <option>XI Kesehatan 1</option>
+    <option>XI Kesehatan 2</option>
     <option>XI Kesehatan 3</option>
+    <option>XII Kesehatan 3</option>
+    <option>XII Kesehatan 2</option>
     <option>XII Kesehatan 3</option>
     <option>XI Teknik 1</option>
     <option>XI Teknik 2</option>
