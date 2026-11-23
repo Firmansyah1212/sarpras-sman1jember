@@ -212,7 +212,8 @@ export default function AdminTable({
                 defaultValue={editing.ruangan}
                 className="w-full rounded-xl border px-4 py-2"
               >
-                <option>Aula Pratama</option>
+               
+<option>Aula Pratama</option>
 <option>Aula Madya</option>
 <option>Aula Jarkasi</option>
 <option>Lab Komputer 1</option>
@@ -220,13 +221,42 @@ export default function AdminTable({
 <option>Lab Komputer 3</option>
 <option>Lapangan</option>
 <option>Ruang Rapat</option>
-<option>Gedung A</option>
-<option>Gedung B</option>
-<option>Gedung C</option>
-<option>Gedung D</option>
-<option>Gedung E</option>
-<option>Gedung F</option>
-<option>Gedung G</option>
+
+<optgroup label="Kelas X">
+  <option>X.1</option>
+  <option>X.2</option>
+  <option>X.3</option>
+  <option>X.4</option>
+  <option>X.5</option>
+  <option>X.6</option>
+  <option>X.7</option>
+  <option>X.8</option>
+  <option>X.9</option>
+  <option>X.10</option>
+  <option>X.11</option>
+</optgroup>
+
+<optgroup label="Kelas XI dan XII">
+  <option>XI Humaniora</option>
+  <option>XII Humaniora</option>
+  <option>XI Kesehatan 3</option>
+  <option>XII Kesehatan 3</option>
+  <option>XI Teknik 1</option>
+  <option>XI Teknik 2</option>
+  <option>XII Teknik 1</option>
+  <option>XII Teknik 2</option>
+  <option>XII Teknik 3</option>
+  <option>XI IPA 1</option>
+  <option>XI IPA 2</option>
+  <option>XI IPA 3</option>
+  <option>XII IPA 1</option>
+  <option>XII IPA 2</option>
+  <option>XI IPS 1</option>
+  <option>XI IPS 2</option>
+  <option>XII IPS 1</option>
+  <option>XII IPS 2</option>
+</optgroup>
+
               </select>
 
               <input
