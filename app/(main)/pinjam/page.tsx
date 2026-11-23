@@ -9,6 +9,7 @@ type JenisPeminjaman = 'kelas' | 'ruangan';
 interface FormData {
   jenis_peminjaman: JenisPeminjaman;
   nama: string;
+  asal_pemohon: string;
   kelas: string;
   ruangan: string;
   tanggal: string;
@@ -21,6 +22,7 @@ interface FormData {
 const initialFormData: FormData = {
   jenis_peminjaman: 'ruangan',
   nama: '',
+  asal_pemohon: '',
   kelas: '',
   ruangan: '',
   tanggal: '',
@@ -86,8 +88,15 @@ export default function FormPeminjaman() {
 
       formDataToSend.append('jenis_peminjaman', formData.jenis_peminjaman);
       formDataToSend.append('nama', formData.nama);
-      formDataToSend.append('kelas', formData.jenis_peminjaman === 'kelas' ? formData.kelas : '');
-      formDataToSend.append('ruangan', formData.jenis_peminjaman === 'ruangan' ? formData.ruangan : '');
+      formDataToSend.append('asal_pemohon', formData.asal_pemohon);
+      formDataToSend.append(
+        'kelas',
+        formData.jenis_peminjaman === 'kelas' ? formData.kelas : ''
+      );
+      formDataToSend.append(
+        'ruangan',
+        formData.jenis_peminjaman === 'ruangan' ? formData.ruangan : ''
+      );
       formDataToSend.append('tanggal', formData.tanggal);
       formDataToSend.append('jam_mulai', formData.jam_mulai);
       formDataToSend.append('jam_selesai', formData.jam_selesai);
@@ -197,7 +206,7 @@ export default function FormPeminjaman() {
           </div>
         </div>
 
-        {/* Nama dan pilihan kelas/ruangan */}
+        {/* Identitas pemohon */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label htmlFor="nama" className="block text-sm font-semibold text-gray-700 mb-1">
@@ -215,10 +224,32 @@ export default function FormPeminjaman() {
             />
           </div>
 
+          <div>
+            <label htmlFor="asal_pemohon" className="block text-sm font-semibold text-gray-700 mb-1">
+              Asal Pemohon <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              id="asal_pemohon"
+              name="asal_pemohon"
+              value={formData.asal_pemohon}
+              onChange={handleChange}
+              required
+              placeholder="Contoh: Guru / OSIS / Siswa Kelas XI Teknik 1"
+              className={inputClass}
+            />
+            <p className="text-xs text-gray-400 mt-1">
+              Tuliskan asal atau identitas Anda.
+            </p>
+          </div>
+        </div>
+
+        {/* Pilihan kelas atau ruangan yang dipinjam */}
+        <div>
           {formData.jenis_peminjaman === 'kelas' ? (
-            <div>
+            <>
               <label htmlFor="kelas" className="block text-sm font-semibold text-gray-700 mb-1">
-                Kelas / Instansi <span className="text-red-500">*</span>
+                Kelas yang Dipinjam <span className="text-red-500">*</span>
               </label>
               <select
                 id="kelas"
@@ -228,7 +259,7 @@ export default function FormPeminjaman() {
                 required
                 className={inputClass}
               >
-                <option value="">Pilih Kelas / Instansi</option>
+                <option value="">Pilih Kelas</option>
 
                 <optgroup label="Kelas X">
                   {Array.from({ length: 11 }, (_, i) => (
@@ -262,15 +293,10 @@ export default function FormPeminjaman() {
                   <option value="XII IPS 1">XII IPS 1</option>
                   <option value="XII IPS 2">XII IPS 2</option>
                 </optgroup>
-
-                <optgroup label="Lainnya">
-                  <option value="OSIS">OSIS</option>
-                  <option value="Lainnya">Lainnya</option>
-                </optgroup>
               </select>
-            </div>
+            </>
           ) : (
-            <div>
+            <>
               <label htmlFor="ruangan" className="block text-sm font-semibold text-gray-700 mb-1">
                 Ruangan <span className="text-red-500">*</span>
               </label>
@@ -292,7 +318,7 @@ export default function FormPeminjaman() {
                 <option value="Lapangan">Lapangan</option>
                 <option value="Ruang Rapat">Ruang Rapat</option>
               </select>
-            </div>
+            </>
           )}
         </div>
 

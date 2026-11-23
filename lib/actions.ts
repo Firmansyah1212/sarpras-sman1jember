@@ -46,12 +46,17 @@ export async function getRuanganDigunakan() {
   if (error) throw new Error(error.message);
 
   return Array.from(
-    new Set((data || []).map((item) => item.ruangan).filter(Boolean))
+    new Set(
+      (data || [])
+        .map((item) => item.ruangan)
+        .filter((room): room is string => Boolean(room))
+    )
   );
 }
 
 // ==========================================
 // CEK BENTROK JADWAL
+// Semua target peminjaman menggunakan kolom ruangan
 // ==========================================
 
 export async function checkBentrok(
@@ -62,19 +67,18 @@ export async function checkBentrok(
   jamSelesai: string,
   excludeId?: string
 ) {
+  // Parameter jenis dipertahankan agar kompatibel
+  // dengan pemanggilan fungsi yang sudah ada.
+  void jenis;
+
   let query = supabaseAdmin
     .from('peminjaman')
     .select('id')
     .eq('tanggal', tanggal)
+    .eq('ruangan', target)
     .neq('status', 'ditolak')
     .lt('jam_mulai', jamSelesai)
     .gt('jam_selesai', jamMulai);
-
-  if (jenis === 'kelas') {
-    query = query.eq('kelas', target);
-  } else {
-    query = query.eq('ruangan', target);
-  }
 
   if (excludeId) {
     query = query.neq('id', excludeId);
@@ -95,8 +99,13 @@ export async function createPeminjaman(formData: FormData) {
   const jenis = formData.get('jenis_peminjaman') as string;
 
   const nama = (formData.get('nama') as string)?.trim();
-  const kelas = (formData.get('kelas') as string)?.trim() || null;
-  const ruangan = (formData.get('ruangan') as string)?.trim() || null;
+  const asalPemohon = (formData.get('asal_pemohon') as string)?.trim();
+
+  const kelasDipinjam =
+    (formData.get('kelas') as string)?.trim() || '';
+
+  const ruanganDipinjam =
+    (formData.get('ruangan') as string)?.trim() || '';
 
   const tanggal = formData.get('tanggal') as string;
   const jamMulai = formData.get('jam_mulai') as string;
@@ -104,40 +113,49 @@ export async function createPeminjaman(formData: FormData) {
 
   const keperluan = (formData.get('keperluan') as string)?.trim();
 
-  // Validasi jenis peminjaman
   if (jenis !== 'kelas' && jenis !== 'ruangan') {
     throw new Error('Jenis peminjaman tidak valid.');
   }
 
-  // Validasi data wajib
-  if (!nama || !tanggal || !jamMulai || !jamSelesai || !keperluan) {
+  if (
+    !nama ||
+    !asalPemohon ||
+    !tanggal ||
+    !jamMulai ||
+    !jamSelesai ||
+    !keperluan
+  ) {
     throw new Error('Semua field wajib diisi.');
   }
 
-  // Validasi pilihan target
-  if (jenis === 'kelas') {
-    if (!kelas || ruangan) {
-      throw new Error('Silakan pilih kelas yang ingin dipinjam.');
-    }
+  // Tentukan tempat yang dipinjam
+  const targetDipinjam =
+    jenis === 'kelas' ? kelasDipinjam : ruanganDipinjam;
+
+  if (!targetDipinjam) {
+    throw new Error(
+      jenis === 'kelas'
+        ? 'Silakan pilih kelas yang ingin dipinjam.'
+        : 'Silakan pilih ruangan yang ingin dipinjam.'
+    );
   }
 
-  if (jenis === 'ruangan') {
-    if (!ruangan || kelas) {
-      throw new Error('Silakan pilih ruangan yang ingin dipinjam.');
-    }
+  if (jenis === 'kelas' && ruanganDipinjam) {
+    throw new Error('Data peminjaman tidak valid.');
   }
 
-  // Validasi waktu
+  if (jenis === 'ruangan' && kelasDipinjam) {
+    throw new Error('Data peminjaman tidak valid.');
+  }
+
   if (jamMulai >= jamSelesai) {
     throw new Error('Jam selesai harus lebih besar dari jam mulai.');
   }
 
-  // Cek bentrok berdasarkan kelas atau ruangan
-  const target = jenis === 'kelas' ? kelas : ruangan;
-
+  // Semua pengecekan menggunakan kolom ruangan
   const bentrok = await checkBentrok(
     jenis,
-    target!,
+    targetDipinjam,
     tanggal,
     jamMulai,
     jamSelesai
@@ -145,9 +163,7 @@ export async function createPeminjaman(formData: FormData) {
 
   if (bentrok) {
     throw new Error(
-      jenis === 'kelas'
-        ? 'Kelas tersebut sudah digunakan pada tanggal dan jam yang dipilih.'
-        : 'Ruangan sudah dipakai pada tanggal dan jam tersebut.'
+      'Kelas atau ruangan tersebut sudah digunakan pada tanggal dan jam yang dipilih.'
     );
   }
 
@@ -193,14 +209,16 @@ export async function createPeminjaman(formData: FormData) {
 
   // ==========================================
   // SIMPAN KE DATABASE
+  // kelas = asal pemohon
+  // ruangan = tempat yang dipinjam
   // ==========================================
 
   const { error } = await supabaseAdmin
     .from('peminjaman')
     .insert({
       nama,
-      kelas: jenis === 'kelas' ? kelas : null,
-      ruangan: jenis === 'ruangan' ? ruangan : null,
+      kelas: asalPemohon,
+      ruangan: targetDipinjam,
       tanggal,
       jam_mulai: jamMulai,
       jam_selesai: jamSelesai,
@@ -318,38 +336,35 @@ export async function updatePeminjaman(
   id: string,
   formData: FormData
 ) {
-  const nama = formData.get('nama') as string;
-  const kelas = (formData.get('kelas') as string)?.trim() || null;
-  const ruangan = (formData.get('ruangan') as string)?.trim() || null;
+  const nama = (formData.get('nama') as string)?.trim();
+  const asalPemohon = (formData.get('asal_pemohon') as string)?.trim();
+  const ruangan = (formData.get('ruangan') as string)?.trim();
 
   const tanggal = formData.get('tanggal') as string;
   const jamMulai = formData.get('jam_mulai') as string;
   const jamSelesai = formData.get('jam_selesai') as string;
 
-  const keperluan = formData.get('keperluan') as string;
+  const keperluan = (formData.get('keperluan') as string)?.trim();
 
-  if (!nama || !tanggal || !jamMulai || !jamSelesai || !keperluan) {
+  if (
+    !nama ||
+    !asalPemohon ||
+    !ruangan ||
+    !tanggal ||
+    !jamMulai ||
+    !jamSelesai ||
+    !keperluan
+  ) {
     throw new Error('Semua field wajib diisi.');
-  }
-
-  if (!kelas && !ruangan) {
-    throw new Error('Kelas atau ruangan harus dipilih.');
-  }
-
-  if (kelas && ruangan) {
-    throw new Error('Pilih kelas atau ruangan saja.');
   }
 
   if (jamMulai >= jamSelesai) {
     throw new Error('Jam selesai harus lebih besar dari jam mulai.');
   }
 
-  const jenis: 'kelas' | 'ruangan' = kelas ? 'kelas' : 'ruangan';
-  const target = kelas || ruangan;
-
   const bentrok = await checkBentrok(
-    jenis,
-    target!,
+    'ruangan',
+    ruangan,
     tanggal,
     jamMulai,
     jamSelesai,
@@ -364,7 +379,7 @@ export async function updatePeminjaman(
     .from('peminjaman')
     .update({
       nama,
-      kelas,
+      kelas: asalPemohon,
       ruangan,
       tanggal,
       jam_mulai: jamMulai,

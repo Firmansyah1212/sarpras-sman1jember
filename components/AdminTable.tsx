@@ -175,156 +175,173 @@ export default function AdminTable({
 />
 
       {editing && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-xl">
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+    <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl bg-white p-6 shadow-xl">
 
-            <h2 className="mb-5 text-xl font-bold">
-              Edit Peminjaman
-            </h2>
+      <h2 className="mb-5 text-xl font-bold">
+        Edit Peminjaman
+      </h2>
 
-            <form
-              onSubmit={handleUpdate}
-              className="space-y-4"
-            >
+      <form onSubmit={handleUpdate} className="space-y-4">
 
-              {error && (
-                <p className="rounded-lg bg-red-50 p-3 text-sm text-red-600">
-                  {error}
-                </p>
-              )}
+        {error && (
+          <p className="rounded-lg bg-red-50 p-3 text-sm text-red-600">
+            {error}
+          </p>
+        )}
 
-              <input
-                name="nama"
-                defaultValue={editing.nama}
-                required
-                className="w-full rounded-xl border px-4 py-2"
-              />
+        <div>
+          <label className="mb-1 block text-sm font-medium">Nama Peminjam</label>
+          <input
+            name="nama"
+            defaultValue={editing.nama ?? ""}
+            required
+            className="w-full rounded-xl border px-4 py-2"
+          />
+        </div>
 
-              <input
-                name="kelas"
-                defaultValue={editing.kelas}
-                required
-                className="w-full rounded-xl border px-4 py-2"
-              />
+        <div>
+          <label className="mb-1 block text-sm font-medium">Asal Pemohon</label>
+          <input
+            name="asal_pemohon"
+            defaultValue={editing.kelas ?? ""}
+            required
+            placeholder="Contoh: Guru, OSIS, Siswa Kelas X.1"
+            className="w-full rounded-xl border px-4 py-2"
+          />
+        </div>
 
-              <select
-                name="ruangan"
-                defaultValue={editing.ruangan}
-                className="w-full rounded-xl border px-4 py-2"
-              >
-               
-<option>Aula Pratama</option>
-<option>Aula Madya</option>
-<option>Aula Jarkasi</option>
-<option>Lab Komputer 1</option>
-<option>Lab Komputer 2</option>
-<option>Lab Komputer 3</option>
-<option>Lapangan</option>
-<option>Ruang Rapat</option>
+        <div>
+          <label className="mb-1 block text-sm font-medium">Ruangan / Tempat Dipinjam</label>
+          <select
+            name="ruangan"
+            defaultValue={editing.ruangan ?? ""}
+            required
+            className="w-full rounded-xl border px-4 py-2"
+          >
+            <option value="">Pilih tempat</option>
 
-<optgroup label="Kelas X">
-  <option>X.1</option>
-  <option>X.2</option>
-  <option>X.3</option>
-  <option>X.4</option>
-  <option>X.5</option>
-  <option>X.6</option>
-  <option>X.7</option>
-  <option>X.8</option>
-  <option>X.9</option>
-  <option>X.10</option>
-  <option>X.11</option>
-</optgroup>
+            <optgroup label="Fasilitas">
+              <option>Aula Pratama</option>
+              <option>Aula Madya</option>
+              <option>Aula Jarkasi</option>
+              <option>Lab Komputer 1</option>
+              <option>Lab Komputer 2</option>
+              <option>Lab Komputer 3</option>
+              <option>Lapangan</option>
+              <option>Ruang Rapat</option>
+            </optgroup>
 
-<optgroup label="Kelas XI dan XII">
-  <option>XI Humaniora</option>
-  <option>XII Humaniora</option>
-  <option>XI Kesehatan 1</option>
-  <option>XI Kesehatan 2</option>
-  <option>XI Kesehatan 3</option>
-  <option>XII Kesehatan 1</option>
-  <option>XII Kesehatan 2</option>
-  <option>XII Kesehatan 3</option>
-  <option>XI Teknik 1</option>
-  <option>XI Teknik 2</option>
-  <option>XII Teknik 1</option>
-  <option>XII Teknik 2</option>
-  <option>XII Teknik 3</option>
-  <option>XI IPA 1</option>
-  <option>XI IPA 2</option>
-  <option>XI IPA 3</option>
-  <option>XII IPA 1</option>
-  <option>XII IPA 2</option>
-  <option>XI IPS 1</option>
-  <option>XI IPS 2</option>
-  <option>XII IPS 1</option>
-  <option>XII IPS 2</option>
-</optgroup>
+            <optgroup label="Kelas X">
+              {Array.from({ length: 11 }, (_, i) => (
+                <option key={i + 1}>X.{i + 1}</option>
+              ))}
+            </optgroup>
 
-              </select>
+            <optgroup label="Kelas XI dan XII">
+              <option>XI Humaniora</option>
+              <option>XII Humaniora</option>
+              <option>XI Kesehatan 1</option>
+              <option>XI Kesehatan 2</option>
+              <option>XI Kesehatan 3</option>
+              <option>XII Kesehatan 1</option>
+              <option>XII Kesehatan 2</option>
+              <option>XII Kesehatan 3</option>
+              <option>XI Teknik 1</option>
+              <option>XI Teknik 2</option>
+              <option>XII Teknik 1</option>
+              <option>XII Teknik 2</option>
+              <option>XII Teknik 3</option>
+              <option>XI IPA 1</option>
+              <option>XI IPA 2</option>
+              <option>XI IPA 3</option>
+              <option>XII IPA 1</option>
+              <option>XII IPA 2</option>
+              <option>XI IPS 1</option>
+              <option>XI IPS 2</option>
+              <option>XII IPS 1</option>
+              <option>XII IPS 2</option>
+            </optgroup>
+          </select>
+        </div>
 
-              <input
-                type="date"
-                name="tanggal"
-                defaultValue={editing.tanggal}
-                className="w-full rounded-xl border px-4 py-2"
-              />
+        <div>
+          <label className="mb-1 block text-sm font-medium">Tanggal</label>
+          <input
+            type="date"
+            name="tanggal"
+            defaultValue={editing.tanggal ?? ""}
+            required
+            className="w-full rounded-xl border px-4 py-2"
+          />
+        </div>
 
-              <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="mb-1 block text-sm font-medium">Jam Mulai</label>
+            <input
+              type="time"
+              name="jam_mulai"
+              defaultValue={editing.jam_mulai?.slice(0, 5) ?? ""}
+              required
+              className="w-full rounded-xl border px-4 py-2"
+            />
+          </div>
 
-                <input
-                  type="time"
-                  name="jam_mulai"
-                  defaultValue={editing.jam_mulai}
-                  className="rounded-xl border px-4 py-2"
-                />
-
-                <input
-                  type="time"
-                  name="jam_selesai"
-                  defaultValue={editing.jam_selesai}
-                  className="rounded-xl border px-4 py-2"
-                />
-
-              </div>
-
-              <textarea
-                name="keperluan"
-                defaultValue={editing.keperluan}
-                rows={4}
-                className="w-full rounded-xl border px-4 py-2"
-              />
-
-              <input
-                type="hidden"
-                name="file_url"
-                defaultValue={editing.file_url}
-              />
-
-              <div className="flex justify-end gap-3">
-
-                <button
-                  type="button"
-                  onClick={() => setEditing(null)}
-                  className="rounded-xl border px-5 py-2"
-                >
-                  Batal
-                </button>
-
-                <button
-                  type="submit"
-                  className="rounded-xl bg-blue-600 px-5 py-2 text-white"
-                >
-                  Simpan
-                </button>
-
-              </div>
-
-            </form>
-
+          <div>
+            <label className="mb-1 block text-sm font-medium">Jam Selesai</label>
+            <input
+              type="time"
+              name="jam_selesai"
+              defaultValue={editing.jam_selesai?.slice(0, 5) ?? ""}
+              required
+              className="w-full rounded-xl border px-4 py-2"
+            />
           </div>
         </div>
-      )}
+
+        <div>
+          <label className="mb-1 block text-sm font-medium">Keperluan</label>
+          <textarea
+            name="keperluan"
+            defaultValue={editing.keperluan ?? ""}
+            rows={4}
+            required
+            className="w-full rounded-xl border px-4 py-2"
+          />
+        </div>
+
+        <input
+          type="hidden"
+          name="file_url"
+          value={editing.file_url ?? ""}
+          readOnly
+        />
+
+        <div className="flex justify-end gap-3 pt-2">
+          <button
+            type="button"
+            onClick={() => {
+              setEditing(null);
+              setError("");
+            }}
+            className="rounded-xl border px-5 py-2"
+          >
+            Batal
+          </button>
+
+          <button
+            type="submit"
+            className="rounded-xl bg-blue-600 px-5 py-2 text-white hover:bg-blue-700"
+          >
+            Simpan Perubahan
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+)}
 
             {deleteItem && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">

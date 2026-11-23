@@ -63,7 +63,7 @@ export default function AdminDesktopTable({
 
               <th className="px-4 py-4 text-left">Nama</th>
 
-              <th className="text-left">Kelas</th>
+              <th className="text-left">Asal Pemohon</th>
 
               <th className="text-left">Ruangan</th>
 
