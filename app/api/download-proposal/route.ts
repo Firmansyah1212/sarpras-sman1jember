@@ -1,6 +1,11 @@
+
 import { NextResponse } from "next/server";
 import JSZip from "jszip";
 import { supabaseAdmin } from "@/lib/supabase/admin";
+
+// Jangan jalankan endpoint ini saat proses build
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
 export async function GET() {
   try {
@@ -25,7 +30,9 @@ export async function GET() {
       if (!item.file_url) continue;
 
       try {
-        const res = await fetch(item.file_url);
+        const res = await fetch(item.file_url, {
+          cache: "no-store",
+        });
 
         if (!res.ok) {
           console.log("File tidak ditemukan:", item.file_url);
@@ -39,7 +46,7 @@ export async function GET() {
 
         zip.file(filename, arrayBuffer);
       } catch (err) {
-        console.log("Gagal download:", item.file_url);
+        console.log("Gagal download:", item.file_url, err);
       }
     }
 
@@ -47,16 +54,16 @@ export async function GET() {
       type: "uint8array",
     });
 
-   const body = new Uint8Array(uint8);
-
-return new Response(body as any, {
+    return new Response(uint8, {
       status: 200,
       headers: {
         "Content-Type": "application/zip",
         "Content-Disposition":
           'attachment; filename="Proposal_Peminjaman.zip"',
+        "Cache-Control": "no-store",
       },
     });
+
   } catch (err: any) {
     console.error(err);
 
