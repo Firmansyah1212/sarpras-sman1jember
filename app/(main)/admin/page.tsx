@@ -25,7 +25,7 @@ export default async function AdminPage() {
         <div className="flex items-center gap-3">
           <a
             href="/api/download-proposal"
-            className="rounded-lg bg-green-600 px-4 py-2 text-white transition hover:bg-green-700"
+            className="rounded-lg bg-green-600 px-4 py-2 text-white transitiFon hover:bg-green-700"
           >
             📥 Download Semua Proposal
           </a>
