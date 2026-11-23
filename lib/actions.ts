@@ -162,11 +162,11 @@ export async function createPeminjaman(formData: FormData) {
   );
 
   if (bentrok) {
-    throw new Error(
-      'Kelas atau ruangan tersebut sudah digunakan pada tanggal dan jam yang dipilih.'
-    );
-  }
-
+  return {
+    success: false,
+    message: 'Tempat sudah dipinjam pada tanggal dan jam tersebut. Silakan pilih jadwal lain.',
+  };
+}
   // ==========================================
   // UPLOAD FILE PROPOSAL
   // ==========================================
@@ -233,7 +233,13 @@ export async function createPeminjaman(formData: FormData) {
   revalidatePath('/');
   revalidatePath('/admin');
   revalidatePath('/daftar');
+
+  return {
+  success: true,
+  message: 'Peminjaman berhasil dikirim.',
+};
 }
+
 
 // ==========================================
 // AMBIL SEMUA DATA PEMINJAMAN
@@ -372,7 +378,7 @@ export async function updatePeminjaman(
   );
 
   if (bentrok) {
-    throw new Error('Perubahan menyebabkan bentrok jadwal.');
+    throw new Error('Tempat sudah dipinjam pada tanggal dan jam tersebut. Silakan pilih jadwal lain.');
   }
 
   const { error } = await supabaseAdmin

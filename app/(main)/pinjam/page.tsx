@@ -106,12 +106,21 @@ export default function FormPeminjaman() {
         formDataToSend.append('file_url', formData.file);
       }
 
-      await createPeminjaman(formDataToSend);
+      const result = await createPeminjaman(formDataToSend);
 
-      setStatus({
-        type: 'success',
-        message: 'Peminjaman berhasil dikirim.',
-      });
+if (!result.success) {
+  setStatus({
+    type: 'error',
+    message: result.message,
+  });
+
+  return;
+}
+
+setStatus({
+  type: 'success',
+  message: result.message,
+});
 
       setFormData(initialFormData);
       setFileName('Tidak ada file dipilih');
