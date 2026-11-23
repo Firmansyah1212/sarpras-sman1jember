@@ -50,19 +50,25 @@ export async function GET() {
       }
     }
 
-    const uint8 = await zip.generateAsync({
-      type: "uint8array",
-    });
+    
+const uint8 = await zip.generateAsync({
+  type: "uint8array",
+});
 
-    return new Response(uint8, {
-      status: 200,
-      headers: {
-        "Content-Type": "application/zip",
-        "Content-Disposition":
-          'attachment; filename="Proposal_Peminjaman.zip"',
-        "Cache-Control": "no-store",
-      },
-    });
+// Konversi Uint8Array menjadi ArrayBuffer
+const buffer = new ArrayBuffer(uint8.byteLength);
+new Uint8Array(buffer).set(uint8);
+
+return new Response(buffer, {
+  status: 200,
+  headers: {
+    "Content-Type": "application/zip",
+    "Content-Disposition":
+      'attachment; filename="Proposal_Peminjaman.zip"',
+    "Cache-Control": "no-store",
+  },
+});
+
 
   } catch (err: any) {
     console.error(err);
